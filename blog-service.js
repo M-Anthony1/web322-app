@@ -1,7 +1,5 @@
 const fs = require("fs")
 
-
-
 var posts = [];
 var categories = [];
 
@@ -13,7 +11,6 @@ module.exports.initialize = function () {
             if(err){
             reject('unable to read file')
             
-
             }
             {
                 posts = JSON.parse(data)
@@ -49,7 +46,6 @@ module.exports.getAllPosts = function () {
         }
         {
             resolve(posts)
-
         }
     })
 }
@@ -67,14 +63,10 @@ const checkPublished = posts.filter(post => post.published === true)
             reject('no results returned')
 
         }{
-
             resolve(checkPublished)
         }
-
-
     })
 }
-
 
 
 module.exports.getCategories = function () {
@@ -84,9 +76,7 @@ module.exports.getCategories = function () {
         if(categories.length === 0){
 
             reject('no results returned')
-
         } {
-
             resolve (categories)
         }
     })
