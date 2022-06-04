@@ -2,8 +2,8 @@ const fs = require("fs")
 
 
 
-let posts = [];
-let categories = [];
+var posts = [];
+var categories = [];
 
 module.exports.initialize = function () {
 
@@ -11,7 +11,7 @@ module.exports.initialize = function () {
         fs.readFile('./data/posts.json', 'utf8', (err,data) =>{
 
             if(err){
-            reject('there is an error')
+            reject('unable to read file')
             
 
             }
@@ -25,7 +25,7 @@ module.exports.initialize = function () {
 
             if (err) {
 
-                reject('there is an error')
+                reject('unable to read file')
             }{
 
                 categories = JSON.parse(data)
@@ -43,7 +43,7 @@ module.exports.getAllPosts = function () {
 
     return new Promise ((resolve,reject) => {
 
-        if(posts.length() === 0){
+        if(posts.length === 0){
 
           reject('no results returned')  
         }
