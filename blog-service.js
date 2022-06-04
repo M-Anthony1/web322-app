@@ -55,7 +55,6 @@ module.exports.getPublishedPosts = function (){
 
 const checkPublished = posts.filter(post => post.published === true)
 
-
     return new Promise ((resolve,reject) => {
 
         if(checkPublished.length === 0){

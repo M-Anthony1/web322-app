@@ -6,10 +6,9 @@ Policy. No part * of this assignment has been copied manually or electronically 
 other source
 * (including 3rd party web sites) or distributed to other students.
 *
-* Name: Marco Schiralli Student ID: 118649219 Date: 06/03/22
+* Name: Marco Schiralli     Student ID: 118649219       Date: 06/03/22
 *
-* Online (Heroku) Link:
-________________________________________________________
+* Online (Heroku) Link:   https://thawing-ocean-71594.herokuapp.com/ 
 *
 ************************************************************************
 ********/ 
@@ -36,7 +35,7 @@ app.get('/about', (req,res)=> {
 
 app.get('/blog', (req,res) => {
     // res.sendFile(path.join(__dirname,'/data/posts.json'))
-    blog.getAllPosts().then((data) => {
+    blog.getPublishedPosts().then((data) => {
 
         res.json(data)
     })
@@ -51,7 +50,7 @@ app.get('/blog', (req,res) => {
 
 app.get('/posts', (req,res) => {
     // res.sendFile(path.join(__dirname,'/data/posts.json'))
-    blog.getPublishedPosts().then((data) => {
+    blog.getAllPosts().then((data) => {
 
         res.json(data)
     })
