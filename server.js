@@ -21,9 +21,9 @@ let app = express();
 let path = require('path');
 
 let HTTP_PORT = process.env.PORT || 8080;
-
-
 app.use(express.static('public'))
+
+
 
 app.get("/", function(req,res){
     res.redirect(path.join("/about"))
@@ -85,15 +85,13 @@ app.use((req, res) => {
 
 
 
+  //initialize 
 blog.initialize().then((data) => {
 
-    app.listen(HTTP_PORT, ()=>{ console.log(`Express http server listening on port ${HTTP_PORT}`)
+    app.listen(HTTP_PORT, ()=>{ console.log(`Express http server listening on port ${HTTP_PORT}`)})
+}) .catch((err) => {
 
-    })
-}) .catch((error) => {
-
-    console.log(error)
+    console.log(err.message)
 })
-
 
 
