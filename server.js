@@ -1,17 +1,15 @@
-/***********************************************************************
-**********
-* WEB322 – Assignment 02
+/*********************************************************************************
+* WEB322 – Assignment 03
 * I declare that this assignment is my own work in accordance with Seneca Academic
-Policy. No part * of this assignment has been copied manually or electronically from any
-other source
-* (including 3rd party web sites) or distributed to other students.
+* Policy. No part Of this assignment has been copied manually or electronically from 
+* any other source (including 3rd party web sites) or distributed to other students.
 *
-* Name: Marco Schiralli     Student ID: 118649219       Date: 06/03/22
+* Name: Marco Schiralli         Student ID:118649219        Date: 06/17/22
 *
-* Online (Heroku) Link:   https://thawing-ocean-71594.herokuapp.com/ 
+* Online (Heroku) Link:  
 *
-************************************************************************
-********/ 
+*
+********************************************************************************/
 
 
 let express = require("express");
