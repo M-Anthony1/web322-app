@@ -1,3 +1,3 @@
 # web322-app
 
-using routes and making a live server for my2nd web assignment.
+Building on assignment 2 with new routes to support adding new posts and querying data.
