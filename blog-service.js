@@ -112,8 +112,8 @@ module.exports.addPost = function (postData) {
             postData.published = true
         }
 
-
         postData.id = posts.length + 1;
+        postData.postDate = formatDate()
         posts.push(postData)
         resolve(postData)
     })
@@ -174,5 +174,16 @@ module.exports.getPostById = function (id) {
 
 }
 
+function formatDate(){
 
+    let now = new Date()
+
+    let yyyy = now.getFullYear()
+    let mm = (now.getMonth() + 1)
+    let dd = (now.getDate())
+
+    let nowDate = [yyyy,mm,dd].join('-')
+
+    return nowDate
+}
 
