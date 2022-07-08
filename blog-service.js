@@ -68,6 +68,25 @@ const checkPublished = posts.filter(post => post.published === true)
 }
 
 
+module.exports.getPublishedPostsByCategory = function(category){
+
+
+    const checkPublishedCategory = posts.filter(post => post.published === true && post.category == category)
+
+    return new Promise ((resolve,reject) => {
+
+        if(checkPublishedCategory.length === 0){
+
+            reject('no results returned')
+
+        }{
+            resolve(checkPublishedCategory)
+        }
+    })
+
+}
+
+
 module.exports.getCategories = function () {
 
     return new Promise ((resolve, reject) =>{

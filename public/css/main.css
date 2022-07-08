@@ -1,7 +1,20 @@
 body{
     background-color:#ffefeb;
     font-family: monospace;
+    
 }
+
+
+.link{
+  
+    color: #2d64e3;
+}
+
+.link:hover{
+
+    color: #141876;
+}
+
 
 p {
     

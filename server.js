@@ -12,24 +12,54 @@
 ********************************************************************************/
 
 
-let express = require("express");
+let express = require("express")
 const blog = require('./blog-service') 
-let app = express();
-let path = require('path');
-
-
+let app = express()
+let path = require('path')
+const exphbs = require('express-handlebars')
+const stripJs = require('strip-js')
 const multer = require("multer")
+
+
+
 
 const cloudinary = require('cloudinary').v2
 const streamifier = require('streamifier')
-const res = require("express/lib/response");
-const { json } = require("express/lib/response");
+const res = require("express/lib/response")
+const { json } = require("express/lib/response")
 
-let HTTP_PORT = process.env.PORT || 8080;
+let HTTP_PORT = process.env.PORT || 8080
 
 app.use(express.static('public'))
 
+app.engine('.hbs', exphbs.engine({ extname: '.hbs',
 
+    helpers: {
+
+        navLink: function(url, options){
+            return '<li' +
+            ((url == app.locals.activeRoute) ? ' class="active" ' : '') +
+            '><a href="' + url + '">' + options.fn(this) + '</a></li>'
+           },
+
+        equal: function (lvalue, rvalue, options) {
+            if (arguments.length < 3)
+            throw new Error("Handlebars Helper equal needs 2 parameters")
+            if (lvalue != rvalue) {
+            return options.inverse(this)
+            } else {
+            return options.fn(this)
+            }
+           },
+
+        safeHTML: function(context){
+            return stripJs(context);
+         }
+
+    }
+}))
+
+app.set('view engine', '.hbs')
 
 cloudinary.config({
     cloud_name: 'marcoanthony',
@@ -40,12 +70,24 @@ cloudinary.config({
 
 const upload = multer()
 
+
+app.use(function(req,res,next){
+    let route = req.path.substring(1)
+    app.locals.activeRoute = "/" + (isNaN(route.split('/')[1]) ? route.replace(/\/(?!.*)/, "") : route.replace(/\/(.*)/, ""))
+    app.locals.viewingCategory = req.query.category
+    next()
+    
+   })
+
+
+   
+
 app.get("/", function(req,res){
     res.redirect(path.join("/about"))
 })
 
 app.get('/about', (req,res)=> {
-    res.sendFile(path.join(__dirname,'/views/about.html'))
+    res.render('about')
     
 })
 
@@ -69,33 +111,33 @@ app.get('/posts', (req,res) => {
     if(req.query.category){
 
         blog.getPostsByCateogry(req.query.category).then((data)=>{
-            res.json(data)
+            res.render("posts", {posts: data})
 
         }).catch((err) => {
-            res.json({ message:err})
+            res.render("posts", {message: "no results"})
         })
     }
 
     else if(req.query.minDate){
 
         blog.getPostsByMinDate(req.query.minDate).then((data)=>{
-            res.json(data)
+            res.render("posts", {posts: data})
 
         }).catch((err) => {
-            res.json({ message:err})
+            res.render("posts", {message: "no results"})
         })
     }
     
     else  {
 
         blog.getAllPosts().then((data) => {
-        res.json(data)
+            res.render("posts", {posts: data})
     })
 
     .catch((err) => {
 
         console.log(err.message)
-        res.json({message:err})
+        res.render("posts", {message: "no results"})
      })
     }
  
@@ -105,19 +147,19 @@ app.get('/categories', (req,res) => {
     
     blog.getCategories().then((data) => {
 
-        res.json(data)
+        res.render("categories", {categories: data})
     })
 
     .catch((err) => {
 
         console.log(err.message)
-        res.json({message:err})
+        res.render("categories", {message: "no results"})
     })
  
 })
 
 app.get('/posts/add', (req,res) =>{
-    res.sendFile(path.join(__dirname+'/views/addPost.html'))
+    res.render('addPost')
 })
 
 app.get('/post/:id', (req, res)=>{
@@ -129,7 +171,7 @@ app.get('/post/:id', (req, res)=>{
     .catch((err) => {
         console.log(err.message)
         res.json({message:err})
-        });
+        })
     })
 
 app.post('/posts/add',upload.single('featureImage'), (req,res) => {
@@ -139,9 +181,9 @@ app.post('/posts/add',upload.single('featureImage'), (req,res) => {
          let stream = cloudinary.uploader.upload_stream(
           (error, result) => {
              if (result) {
-                 resolve(result);
+                 resolve(result)
            } else {
-                 reject(error);
+                 reject(error)
              }
           }
         )
@@ -150,7 +192,7 @@ app.post('/posts/add',upload.single('featureImage'), (req,res) => {
        }
 
     async function upload(req) {
-        let result = await streamUpload(req);
+        let result = await streamUpload(req)
         console.log(result)
         return result
        }
@@ -168,7 +210,7 @@ app.post('/posts/add',upload.single('featureImage'), (req,res) => {
             console.log('ERROR')
         })
     
-       });
+       })
     
 })
 
