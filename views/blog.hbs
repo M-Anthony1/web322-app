@@ -11,7 +11,7 @@
             <br /><br />
 
             <strong>Category:</strong> {{data.post.category}}<br />
-            <strong>Last Updated:</strong> {{data.post.postDate}}
+            <strong>Last Updated:</strong> {{#formatDate data.post.postDate}}{{/formatDate}}
 
         </article>
 
@@ -41,10 +41,9 @@
         {{/if}}
 
 
+
         {{#if data.categories}}
-
             <h4>Categories</h4>
-
         <ul class="list-group">
         {{#each data.categories}}
            <a href="/blog?category={{id}}" class="list-group-item">{{category}}</a>

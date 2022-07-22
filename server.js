@@ -20,8 +20,6 @@ const stripJs = require('strip-js')
 const multer = require("multer")
 
 
-
-
 const cloudinary = require('cloudinary').v2
 const streamifier = require('streamifier')
 const res = require("express/lib/response")
@@ -30,6 +28,7 @@ const { json } = require("express/lib/response")
 let HTTP_PORT = process.env.PORT || 8080
 
 app.use(express.static('public'))
+app.use(express.urlencoded({extended: true}))
 
 app.engine('.hbs', exphbs.engine({ extname: '.hbs',
 
@@ -53,7 +52,14 @@ app.engine('.hbs', exphbs.engine({ extname: '.hbs',
 
         safeHTML: function(context){
             return stripJs(context);
-         }
+         },
+
+         formatDate: function(dateObj){
+            let year = dateObj.getFullYear();
+            let month = (dateObj.getMonth() + 1).toString();
+            let day = dateObj.getDate().toString();
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2,'0')}`;
+           }
 
     }
 }))
@@ -198,10 +204,21 @@ app.get('/posts', (req,res) => {
     if(req.query.category){
 
         blog.getPostsByCateogry(req.query.category).then((data)=>{
-            res.render("posts", {posts: data})
+
+
+            if(data.length > 0){
+
+                res.render("posts", {posts: data})
+            }
+            else{
+
+                res.render("posts", {message: "no results"})
+
+            }
 
         }).catch((err) => {
-            res.render("posts", {message: "no results"})
+
+            console.log(err.message)
         })
     }
 
@@ -218,7 +235,13 @@ app.get('/posts', (req,res) => {
     else  {
 
         blog.getAllPosts().then((data) => {
-            res.render("posts", {posts: data})
+
+            if(data.length > 0){
+                res.render("posts", {posts: data})
+            }
+            else
+                res.render("posts", {message: "no results"})
+
     })
 
     .catch((err) => {
@@ -234,19 +257,37 @@ app.get('/categories', (req,res) => {
     
     blog.getCategories().then((data) => {
 
-        res.render("categories", {categories: data})
+        if(data.length > 0){
+            
+            res.render("categories", {categories: data})
+        }
+        else{
+
+            res.render("categories", {message: "no results"})
+        }
+
+        
+
     })
 
     .catch((err) => {
 
         console.log(err.message)
-        res.render("categories", {message: "no results"})
+        
     })
  
 })
 
 app.get('/posts/add', (req,res) =>{
-    res.render('addPost')
+
+    blog.getCategories().then((data) => {
+
+        res.render("addPost", {categories: data});
+
+    })
+    .catch((err) => 
+    res.render("addPost", {categories: []}))
+
 })
 
 app.get('/post/:id', (req, res)=>{
@@ -300,6 +341,56 @@ app.post('/posts/add',upload.single('featureImage'), (req,res) => {
        })
     
 })
+
+app.get('/categories/add', (req,res) => {
+
+    res.render('addCategory')
+
+})
+
+app.post('/categories/add', (req,res) => {
+
+        
+        blog.addCategory(req.body).then(()=> {
+            
+            res.redirect('/categories')
+            
+        })
+        .catch((err) =>{
+            console.log('ERROR')
+        })
+    
+    })
+
+app.get('/categories/delete/:id', (req, res) => {
+
+
+    blog.deleteCategoryById(req.params.id).then(() =>{
+
+        res.redirect('/categories')
+    })
+    .catch(()=>{
+
+        res.status(500).send('Unable to Remove Category / Category not found')
+
+    })
+})
+
+app.get('/posts/delete/:id', (req, res) => {
+
+
+    blog.deletePostById(req.params.id).then(() =>{
+
+        res.redirect('/posts')
+    })
+    .catch(()=>{
+
+        res.status(500).send('Unable to Remove Post / Post not found')
+
+    })
+})
+
+
 
 
 // No matching route 

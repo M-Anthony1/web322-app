@@ -2,54 +2,55 @@
 
 <div class="row">
     <div class="col-md-12">
-    <h2>Posts</h2>
-    <hr />  
+        <h2>Posts  <a href="/posts/add" class="btn btn-success pull-right">Add Post</a> </h2>
+        <hr />  
 
-    <div class="table-responsive">
+        <div class="table-responsive">
 
-        <table class = "table">
+            <table class = "table">
 
-            <thead>
-                <tr>
-                    <th><strong>Post ID</strong></th>
-                    <th><strong>Title</strong></th>
-                    <th><strong>Post Date</strong></th>
-                    <th><strong>Category</strong></th>
-                    <th><strong>Published</strong></th>
-                </tr>
+             <thead>
+                 <tr>
+                     <th><strong>Post ID</strong></th>
+                     <th><strong>Title</strong></th>
+                     <th><strong>Post Date</strong></th>
+                     <th><strong>Category</strong></th>
+                     <th><strong>Published</strong></th>
+                 </tr>
 
-            </thead>
+              </thead>
 
-            {{#each posts}}
-            <tbody>
+              <tbody>
 
-                <tr>
-                    <td>{{id}}</td>
-                    <td>{{title}}</td>
-                    <td>{{postDate}}</td>
-                    <td ><a class = "link" href="/posts?category={{category}}">{{category}}</a></td>
-                    <td>{{published}}</td>
-                </tr>      
+                {{#each posts}}
+
+                    <tr>
+                        <td>{{id}}</td>
+                        <td>{{title}}</td>
+                        <td>{{#formatDate postDate}}{{/formatDate}}</td>
+                        <td ><a class = "link" href="/posts?category={{category}}">{{category}}</a></td>
+                        <td>{{published}}</td>
+                        <td><a href="./posts/delete/{{this.id}}" class="btn btn-danger">Remove</a></td>
+                    </tr>      
+                {{/each}}
             
-            {{/each}}
 
-            {{#unless posts}}
+             </tbody>
+
+            </table>
+        </div>
+       
+    </div>
+        {{#unless posts}}
 
             <div class="col-md-12 text-center">
-                 <strong>{{message}}</strong>
+                <strong>{{message}}</strong>
             </div>
 
-            {{/unless}}
-
-            </tbody>
+        {{/unless}}
 
 
 
 
 
-        </table>
-    </div>
-
- 
-    </div>
 </div>
