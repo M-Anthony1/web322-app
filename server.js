@@ -177,8 +177,8 @@ app.get('/blog/:id', async (req, res) => {
         // Obtain the post by "id"
 
         //getting the first index since the clicked id is stored there
-        const postById = await blog.getPostById(req.params.id)
-        viewData.post = postById[0]
+        viewData.post = await blog.getPostById(req.params.id)
+       
 
     }catch(err){
         viewData.message = "no results"; 

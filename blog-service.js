@@ -30,13 +30,13 @@ module.exports.initialize = function () {
 
     return new Promise((resolve, reject) => {
 
-    sequelize.sync().then(function(){
+    sequelize.sync().then(() => {
         
     resolve(console.log('Succesfully connected to the database'))
 
     })
 
-    .catch(function(){
+    .catch(()=> {
 
         {reject(console.log('unable to sync the database'))}
     })  
@@ -50,12 +50,12 @@ module.exports.initialize = function () {
 module.exports.getAllPosts = function () {
 
     return new Promise((resolve, reject) => {
-        sequelize.sync().then(function(){
+        sequelize.sync().then(() => {
 
             Post.findAll().then(function(data){
                 resolve(data)
             })
-            .catch(function(){reject('no results returned')})
+            .catch(() => {reject('no results returned')})
         })
     })
 }
@@ -65,14 +65,15 @@ module.exports.getPublishedPosts = function (){
 
     return new Promise((resolve, reject) => {
 
-        sequelize.sync().then(function(){
+        sequelize.sync().then(() => {
 
             Post.findAll({where : {published: true}})
             .then(function(data){
 
                 resolve(data)
             })
-            .catch(() => {reject(console.log('No results returned'))})
+            .catch(() => 
+            {reject(console.log('No results returned'))})
             
         })
        });
@@ -85,13 +86,14 @@ module.exports.getPublishedPostsByCategory = function(category){
     return new Promise((resolve, reject) => {
 
 
-        sequelize.sync().then(function(){
+        sequelize.sync().then(() => {
             Post.findAll({where:{published:true, category:category}})
             .then(function(data){
 
                 resolve(data)
             })
-            .catch(() => {reject(console.log('No results returned'))})
+            .catch(() => 
+            {reject(console.log('No results returned'))})
         })
        });
 
@@ -110,7 +112,8 @@ module.exports.getCategories = function () {
 
                 resolve(data)
             })
-            .catch(function(){reject(console.log('no results returned'))})
+            .catch(() => 
+            {reject(console.log('no results returned'))})
 
         })
     
@@ -136,7 +139,8 @@ module.exports.addPost = function (postData) {
 
         Post.create(postData)
         .then(resolve('Success, Post was added!'))
-        .catch(function(){reject(console.log('unable to create post'))})
+        .catch(()=>
+        {reject(console.log('unable to create post'))})
      })
    
     });
@@ -151,10 +155,10 @@ module.exports.getPostsByCateogry = function (category) {
 
             Post.findAll({where : {category:category}})
             
-            .then(function(data){
+            .then((data) => {
                 resolve(data)
             })
-            .catch(function(){reject(console.log('no results returned'))})
+            .catch(() => {reject(console.log('no results returned'))})
             })
         })
 }
@@ -176,7 +180,7 @@ module.exports.getPostsByMinDate = function (minDateStr) {
             .then(function(data){
                 resolve(data)
             })
-            .catch(function(){reject(console.log('no results returned'))})
+            .catch(() => {reject(console.log('no results returned'))})
         });
     })
 }
@@ -188,11 +192,12 @@ module.exports.getPostById = function (id) {
 
     sequelize.sync().then(function(){
         Post.findAll({where:{id:id}})
-        .then(function(data){
+        .then((data) => {
 
             resolve(data[0])
         })
-        .catch(function(){reject(console.log('no results returned'))})
+        .catch(() => 
+        {reject(console.log('no results returned'))})
         
      })
     });
@@ -213,7 +218,7 @@ module.exports.addCategory = function (categoryData){
         sequelize.sync().then(function(){
 
             Category.create(categoryData).then(resolve(console.log('Category was created')))
-            .catch(function(){reject('unable to create category')})
+            .catch(() => {reject('unable to create category')})
         })
 
     }
@@ -225,8 +230,8 @@ module.exports.deleteCategoryById = function (id){
     return new Promise((resolve, reject)=>{
 
         Category.destroy({where:{ id: id}})
-        .then(resolve(console.log('destroyed')))
-        .catch(reject('task rejected'))
+        .then(() => resolve(console.log('destroyed')))
+        .catch(() => reject('task rejected'))
 
     })
 }
@@ -236,23 +241,11 @@ module.exports.deletePostById = function (id){
     return new Promise((resolve, reject)=>{
 
         Post.destroy({where:{id: id}})
-        .then(resolve(console.log('destroyed')))
-        .catch(reject('task rejected'))
+        .then(() => resolve(console.log('destroyed')))
+        .catch(() => reject('task rejected'))
 
     })
 }
 
-// function formatDate(){
-
-//     let now = new Date()
-
-//     let yyyy = now.getFullYear()
-//     let mm = (now.getMonth() + 1)
-//     let dd = (now.getDate())
-
-//     let nowDate = [yyyy,mm,dd].join('-')
-
-//     return nowDate
-// }
 
 
