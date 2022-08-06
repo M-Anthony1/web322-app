@@ -28,36 +28,39 @@ var userSchema = new Schema({
     })
    }
 
-
 module.exports.registerUser = function (userData){
+
     return new Promise((resolve,reject) => {
 
         if(userData.password != userData.password2){
-            reject("Passwords do not match");
+            reject("Passwords do not match")
         } 
         
             bcrypt.hash(userData.password, 10).then(hash=>{
-                userData.password = hash;
-            let newUser = new User(userData);
+                userData.password = hash
+
+                    let newUser = new User(userData)
 
             newUser.save().then(()=>{
-            resolve()
+                resolve()
             
-             }).catch(err=>{
+             }).catch(error=>{
 
-                if(err.code == 11000){
-                    reject("User Name already taken");
+                if(error.code == 11000){
+                    reject("User Name already taken")
 
                 }else{
-                    reject(`There was an error creating the user: ${err}`);
+                    reject(`There was an error creating the user: ${error}`)
                 }
             })
         }).catch(err=>{
-            reject(`There was an error encrypting the password ${err}`);
+            reject(`There was an error encrypting the password ${err}`)
         })
         
     })
 }
+
+
 module.exports.checkUser = function(userData) {
     return new Promise((resolve, reject) => {
         User.find({ userName: userData.userName })
@@ -65,23 +68,25 @@ module.exports.checkUser = function(userData) {
             .then(users => {
                 bcrypt.compare(userData.password, users[0].password).then(result => {
                     if (result) {
+        
                         users[0].loginHistory.push({ dateTime: (new Date()).toString(), userAgent: userData.userAgent })
+                        
                         User.updateOne(
                             { userName: userData.userName },
                             { $set: { loginHistory: users[0].loginHistory } }
                         
                         )
-                            .exec()
-                            .then(() => { resolve(users[0])})
-                            .catch(err => { reject(`There was an error verifying the user: ${err}`)})
+                            .exec().then(() => { 
+                                resolve(users[0])
+                            }).catch(err => { reject(`There was an error verifying the user: ${err}`)})
                     }
                     else {
-                        reject(`Incorrect Password for user: ${userData.userName}`);
+                        reject(`Incorrect Password for user: ${userData.userName}`)
                     }
                 })
             })
             .catch(() => {
-                reject(`Unable to find user: ${userData.userName}`);
+                reject(`Unable to find user: ${userData.userName}`)
             })
     })
 
